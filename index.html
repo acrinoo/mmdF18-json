@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Babushka</title>
+    <style>
+        body {
+            background-color: rgb(240, 240, 240);
+        }
+
+        article {
+            padding: 1em;
+            background-color: white;
+        }
+
+        .data-container article img {
+            width: 100%;
+        }
+
+        .data-container {
+            margin: 0 auto;
+            display: grid;
+        }
+
+        @media screen and (min-width:580px) {
+            .data-container {
+                padding-left: 10%;
+                padding-right: 10%;
+                grid-gap: 5px;
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <button class="menu-item" data-retter="alle">Alle retter</button>
+            <button class="menu-item" data-retter="Foretter">Foretter</button>
+            <button class="menu-item" data-retter="Hovedretter">Hovedretter</button>
+            <button class="menu-item" data-retter="Desserter">Desserter</button>
+            <button class="menu-item" data-retter="Drikkevarer">Drikkevarer</button>
+        </nav>
+
+
+    </header>
+    <main class="container">
+        <section class="data-container"></section>
+    </main>
+    <template class="data-template">
+    <article class="ret">
+        <h2>
+        </h2>
+        <img src="" alt=""><br>
+        Ret: <span class="data-retter"></span><br>
+
+             </article>
+    </template>
+    <script>
+        let dest = document.querySelector(".data-container"),
+            retter, kategoriFilter = "alle";
+        document.addEventListener("DOMContentLoaded", hentJson);
+
+        async function hentJson() {
+            let myJson = await fetch("json/menu.json");
+            retter = await myJson.json();
+            console.log(retter);
+
+
+        }
+
+        document.querySelectorAll(".menu.item").forEach(knap => {
+            knap.addEventListener("click", filtrering)
+
+        })
+
+
+        function filtrering() {
+            dest.textContent = "";
+            madretter = this.getAttribute("data-retter");
+            visMadretter();
+        }
+
+        document.querySelectorAll("")
+
+        function visMadretter() {
+            let kategori = document.querySelector(".data-retter");
+            alert(ret)
+            retter.forEach(person => {
+                    //  if(retter)??????
+                    break
+
+
+
+                    let klon = temp.cloneNode(true).content;
+                    klon.querySelector("h2").textContent = retter.navn;
+                    klon.querySelector("img").src = retter.billede;
+                    klon.querySelector(".data-retter").textContent = retter.kategori;
+                    dest.appendChild(klon);
+
+                }
+
+                //let img = "imgs/small")
+            }
+
+    </script>
+</body>
+
+</html>
