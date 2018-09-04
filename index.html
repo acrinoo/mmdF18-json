@@ -7,11 +7,13 @@
     <style>
         body {
             background-color: rgb(240, 240, 240);
+            font-family: fantasy;
         }
 
         article {
-            padding: 1em;
+            padding: 2em;
             background-color: white;
+
         }
 
         .data-container article img {
@@ -23,6 +25,7 @@
             display: grid;
         }
 
+
         @media screen and (min-width:580px) {
             .data-container {
                 padding-left: 10%;
@@ -30,8 +33,42 @@
                 grid-gap: 5px;
                 grid-template-columns: repeat(3, 1fr);
             }
-        }
+            #modal {
+                background-color: azure;
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                text-align: center;
+                display: none;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 1s;
+            }
+            #modalcontent {
+                background-color: coral;
+                margin: auto;
+                width: 70vw;
+                height: 70vw;
 
+            }
+            #modal.vis {
+                display: block;
+                pointer-events: all;
+            }
+            #modal img {
+                height: 50vw;
+                object-fit: scale-down;
+            }
+            .logo {
+                width: 50vw;
+                height: 20vw;
+                margin: auto;
+                padding: 10px;
+
+
+
+            }
+        }
     </style>
 </head>
 
@@ -39,14 +76,21 @@
     <header>
         <nav>
             <button class="menu-item" data-retter="alle">Alle retter</button>
-            <button class="menu-item" data-retter="Foretter">Foretter</button>
+            <button class="menu-item" data-retter="Forretter">Forretter</button>
             <button class="menu-item" data-retter="Hovedretter">Hovedretter</button>
             <button class="menu-item" data-retter="Desserter">Desserter</button>
             <button class="menu-item" data-retter="Drikkevarer">Drikkevarer</button>
         </nav>
-
+        <img class="logo" src="babushka1.png" alt="">
 
     </header>
+    <section id="modal">
+        <button>Skjul</button>
+        <div id="modal-content"></div>
+        <h2 class="modal-navn"></h2>
+        <img class="modal-billede" src="" alt "">
+    </section>
+
     <main class="container">
         <section class="data-container"></section>
     </main>
@@ -60,6 +104,7 @@
              </article>
     </template>
     <script>
+        let modal = document.querySelector("#modal");
         let dest = document.querySelector(".data-container"),
             retter, kategoriFilter = "alle";
         document.addEventListener("DOMContentLoaded", hentJson);
@@ -68,11 +113,11 @@
             let myJson = await fetch("json/menu.json");
             retter = await myJson.json();
             console.log(retter);
-
+            visMadretter();
 
         }
 
-        document.querySelectorAll(".menu.item").forEach(knap => {
+        document.querySelectorAll(".menu-item").forEach(knap => {
             knap.addEventListener("click", filtrering)
 
         })
@@ -84,28 +129,43 @@
             visMadretter();
         }
 
-        document.querySelectorAll("")
+
 
         function visMadretter() {
             let kategori = document.querySelector(".data-retter");
-            alert(ret)
-            retter.forEach(person => {
-                    //  if(retter)??????
-                    break
+            let temp = document.querySelector(".data-template");
+
+            retter.forEach(ret => {
 
 
+                let klon = temp.cloneNode(true).content;
+                klon.querySelector("h2").textContent = ret.navn;
+                klon.querySelector("img").src = "/imgs/small/" + ret.billede + "-sm.jpg";
 
-                    let klon = temp.cloneNode(true).content;
-                    klon.querySelector("h2").textContent = retter.navn;
-                    klon.querySelector("img").src = retter.billede;
-                    klon.querySelector(".data-retter").textContent = retter.kategori;
-                    dest.appendChild(klon);
+                klon.querySelector("img").addEventListener("click", () => {
+                    visModal(person);
+                })
+                klon.querySelector(".data-retter").textContent = ret.kategori;
+                dest.appendChild(klon);
 
-                }
+            })
 
-                //let img = "imgs/small")
+            function visModal(personen) {
+                modal.querySelector("#modal").classlist.add("vis");
+                modal.querySelector("#button").addEventListener("click", skjulModal);
+                modal.querySelector("modal-navn".textContent = personen.navn);
+                modal.querySelector("modal-billede").src = personen.billede;
+                modal.querySelector("modal-billede".alt = "foto af " + personen.navn);
+
             }
 
+            function skjulModal() {
+                modal.classList.remove("vis");
+            }
+
+
+
+        }
     </script>
 </body>
 
