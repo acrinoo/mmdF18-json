@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Babushka</title>
+    <style>
+        body {
+            background-color: rgb(120, 140, 140);
+            font-family: fantasy;
+            margin: 0;
+        }
+
+        article {
+            padding: 1em;
+            background-color: white;
+
+        }
+
+        .data-container article img {
+            width: 100%;
+        }
+
+        .data-container {
+            margin: 0 auto;
+            display: grid;
+        }
+
+        .logo {
+            display: block;
+            width: 50vw;
+            height: 20vw;
+            padding: 10px;
+            align-content: center;
+
+        }
+
+        @media screen and (min-width:580px) {
+            .data-container {
+                padding-left: 10%;
+                padding-right: 10%;
+                grid-gap: 5px;
+                grid-template-columns: repeat(3, 1fr);
+            }
+            #modal {
+                background-color: azure;
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                text-align: center;
+
+                opacity: 0;
+                pointer-events: none;
+                transition: all 1s;
+            }
+            #modalcontent {
+                background-color: coral;
+                margin: auto;
+                width: 70vw;
+                height: 70vw;
+
+            }
+            #modal.vis {
+                display: block;
+                pointer-events: all;
+                opacity: 1;
+            }
+            #modal img {
+                height: 50vw;
+                object-fit: scale-down;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img class="logo" src="babushka1.png">
+        <nav>
+            <button class="menu-item" data-retter="alle">Alle retter</button>
+            <button class="menu-item" data-retter="Forretter">Forretter</button>
+            <button class="menu-item" data-retter="Hovedretter">Hovedretter</button>
+            <button class="menu-item" data-retter="Desserter">Desserter</button>
+            <button class="menu-item" data-retter="Drikkevarer">Drikkevarer</button>
+        </nav>
+
+
+    </header>
+    <section id="modal">
+
+        <button>X</button>
+        <div id="modal-content">
+            <h2 class="modal-navn">test</h2>
+            <img class="modal-billede" src="">
+        </div>
+    </section>
+
+
+
+    <main class="container">
+        <section class="data-container"></section>
+    </main>
+    <template class="data-template">
+    <article class="ret">
+        <h2></h2>
+        <img src="" alt="">
+        <br> pris:
+        <a class="data-pris" href=""></a>
+        <br>kategori <span class="data-kategori"></span>
+        <br>
+
+
+             </article>
+    </template>
+    <script>
+        let dest = document.querySelector(".data-container"),
+            retter, kategoriFilter = "alle";
+        document.addEventListener("DOMContentLoaded", hentJson);
+
+        async function hentJson() {
+            let myJson = await fetch("json/menu.json");
+            retter = await myJson.json();
+            console.log(retter);
+            visMadretter();
+
+        }
+
+        function visMadretter() {
+            let dest = document.querySelector(".data-container");
+            let temp = document.querySelector(".data-template");
+            retter.forEach(ret => {
+                    if (ret.kategori == kategoriFilter || kategoriFilter == "alle") {
+
+
+
+                        let klon = temp.cloneNode(true).content;
+                        klon.querySelector("h2").textContent = ret.navn;
+                        klon.querySelector("img").src = "/imgs/small/" + ret.billede + "-sm.jpg";
+                        klon.querySelector(".data-kategori").textContent = ret.kategori;
+
+                        dest.appendChild(klon);
+                    }
+
+                    retter.forEach(ret => {
+                        let klon = temp.cloneNode(true).content;
+
+
+                        klon.querySelector("h2").textContent = ret.navn;
+                        klon.querySelector("img").src = ret.billede;
+                        klon.querySelector("img").addEventListener("click", () => {
+                            visModal(ret);
+                        });
+                        klon.querySelector(".data-pris").textContent = ret.pris;
+                        klon.querySelector(".data-kategori").textContent = ret.kategori;
+                        // kan skrives flere med information om ret osv.
+
+                        dest.appendChild(klon);
+                    })
+                }
+
+                document.querySelectorAll(".menu-item").forEach(knap => {
+                    knap.addEventListener("click", filtrering)
+
+                });
+
+
+                function filtrering() {
+                    dest.textContent = "";
+                    kategoriFilter = this.getAttribute("data-kategori");
+                    visMadretter();
+                    console.log(datakategori);
+                }
+
+
+
+
+
+                function visModal(retten) {
+                    modal.querySelector("#modal").classlist.add("vis");
+
+                    modal.querySelector("modal-navn".textContent = retten.navn);
+                    modal.querySelector("modal-billede").src = "" + retten.billede;
+                    modal.querySelector("modal-billede").alt = "Foto af " + retten.navn;
+                    modal.querySelector("#modal button").addEventListener("click", skjulModal);
+
+                }
+
+
+                function skjulModal() {
+                    modal.classList.remove("vis");
+                }
+
+
+
+            }
+    </script>
+</body>
+
+</html>
